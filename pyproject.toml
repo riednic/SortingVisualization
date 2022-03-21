@@ -8,7 +8,7 @@ authors = ["Nico Riedl"]
 python = "^3.9"
 
 [tool.poetry.dev-dependencies]
-pyqt6 = "6.2.3"
+pygame = "2.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
