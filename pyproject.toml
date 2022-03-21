@@ -8,7 +8,7 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.9"
 
 [tool.poetry.dev-dependencies]
-pygame = "2.1.2"
+pyqt5 = ""
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
