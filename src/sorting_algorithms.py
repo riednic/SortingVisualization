@@ -22,14 +22,14 @@ class DrawableSortingAlgorithm:
         self.color_white = (255, 255, 255)
         self.display_color = (0, 0, 0)
 
-    def change_sortable(self, sortable: list[int]):
-        self.sortable = sortable
-
     def draw(self, **kwargs) -> None:
         raise NotImplemented
 
     def sort(self, **kwargs) -> list[int]:
         raise NotImplemented
+
+    def change_sortable(self, sortable: list[int]):
+        self.sortable = sortable
 
     def timed_sort(self) -> tuple[list[int], float]:
         start_time = perf_counter()
