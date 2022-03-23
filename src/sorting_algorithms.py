@@ -8,9 +8,12 @@ class SortingStrategy(IntEnum):
     HIGH_TO_LOW = 1
 
 
-class InPlaceSortingAlgorithm:
+class DrawableSortingAlgorithm:
 
-    def __init__(self, name: str, complexity: str, display):
+    def __init__(self, sortable: list[int], name: str, complexity: str, display):
+        self.sortable = sortable
+        self.name = name
+        self.complexity = complexity
         self.display = display
         self.width = display.get_size()[0]
         self.height = display.get_size()[1]
@@ -18,55 +21,19 @@ class InPlaceSortingAlgorithm:
         self.color_orange = (240, 134, 48)
         self.color_white = (255, 255, 255)
         self.display_color = (0, 0, 0)
-        self.name = name
-        self.complexity = complexity
 
-    def draw(self, sortable: list[int], current_index: int, changed_position: int = -1):
-        if sortable:
-            self._reset_display()
-            line_width = round(self.width / len(sortable))
-            for i, e in enumerate(sortable):
-                line_height = (e / self.height)*2.5
-                if i == current_index:
-                    pygame.draw.rect(self.display, self.color_green, (i * line_width, 0, line_width, line_height))
-                elif i == changed_position:
-                    pygame.draw.rect(self.display, self.color_orange, (i * line_width, 0, line_width, line_height))
-                else:
-                    pygame.draw.rect(self.display, self.color_white, (i * line_width, 0, line_width, line_height))
-            pygame.display.update()
+    def change_sortable(self, sortable: list[int]):
+        self.sortable = sortable
 
-    def sort(self, sortable: list[int]):
+    def draw(self, **kwargs) -> None:
         raise NotImplemented
 
-    def timed_sort(self, sortable: list[int]) -> float:
-        start_time = perf_counter()
-        self.sort(sortable)
-        end_time = perf_counter()
-        return end_time - start_time
-
-    def _reset_display(self):
-        self.display.fill(self.display_color)
-
-
-class OutOfPlaceSortingAlgorithm:
-
-    def __init__(self, name: str, complexity: str, display):
-        self.display = display
-        self.width = display.get_size()[0]
-        self.height = display.get_size()[1]
-        self.color_green = (0, 128, 0)
-        self.color_orange = (240, 134, 48)
-        self.color_white = (255, 255, 255)
-        self.display_color = (0, 0, 0)
-        self.name = name
-        self.complexity = complexity
-
-    def sort(self, sortable: list[int]) -> list[int]:
+    def sort(self, **kwargs) -> list[int]:
         raise NotImplemented
 
-    def timed_sort(self, sortable: list[int]) -> (list[int], float):
+    def timed_sort(self) -> tuple[list[int], float]:
         start_time = perf_counter()
-        solution = self.sort(sortable)
+        solution = self.sort(sortable=self.sortable)
         end_time = perf_counter()
         return solution, end_time - start_time
 
@@ -74,34 +41,59 @@ class OutOfPlaceSortingAlgorithm:
         self.display.fill(self.display_color)
 
 
-class InsertionSort(InPlaceSortingAlgorithm):
+class InsertionSort(DrawableSortingAlgorithm):
 
-    def __init__(self, sorting_strategy: SortingStrategy, display):
-        super().__init__(self.__class__.__name__, "O(n^2)", display)
+    def __init__(self, sortable: list[int], sorting_strategy: SortingStrategy, display):
+        super().__init__(sortable, self.__class__.__name__, "O(n^2)", display)
         self.sorting_strategy = sorting_strategy
 
-    def sort(self, sortable: list[int]):
-        for i in range(1, len(sortable)):
-            value = sortable[i]
+    def draw(self, current_index: int = -1, changed_position: int = -1) -> None:
+        if self.sortable:
+            self._reset_display()
+            normalized_sortable = self._normalize()
+            line_width = round(self.width / len(self.sortable))
+            for i, e in enumerate(normalized_sortable):
+                if i == current_index:
+                    pygame.draw.rect(self.display, self.color_green, (i * line_width, 0, line_width, e))
+                elif i == changed_position:
+                    pygame.draw.rect(self.display, self.color_orange, (i * line_width, 0, line_width, e))
+                else:
+                    pygame.draw.rect(self.display, self.color_white, (i * line_width, 0, line_width, e))
+            pygame.display.update()
+
+    def sort(self, **kwargs) -> list[int]:
+        for i in range(1, len(self.sortable)):
+            value = self.sortable[i]
             j = i
-            while self._sorting_condition(sortable, j, value):
-                sortable[j] = sortable[j - 1]
+            while self._sorting_condition(j, value):
+                self.sortable[j] = self.sortable[j - 1]
                 j = j - 1
-                self.draw(sortable, i, j)
-            sortable[j] = value
+                self.draw(i, j)
+            self.sortable[j] = value
+        return self.sortable
 
-    def _sorting_condition(self, sortable: list[int], j: int, value: int) -> bool:
+    def _normalize(self) -> list[int]:
+        normalized_sortable = []
+        for e in self.sortable:
+            normalized_e = self.height * (e / max(self.sortable))
+            normalized_sortable.append(normalized_e)
+        return normalized_sortable
+
+    def _sorting_condition(self, i: int, value: int) -> bool:
         if self.sorting_strategy == SortingStrategy.LOW_TO_HIGH:
-            return (j > 0) and (sortable[j - 1] > value)
+            return (i > 0) and (self.sortable[i - 1] > value)
         if self.sorting_strategy == SortingStrategy.HIGH_TO_LOW:
-            return (j > 0) and (sortable[j - 1] < value)
+            return (i > 0) and (self.sortable[i - 1] < value)
 
 
-class MergeSort(OutOfPlaceSortingAlgorithm):
+class MergeSort(DrawableSortingAlgorithm):
 
-    def __init__(self, sorting_strategy: SortingStrategy, display):
-        super().__init__(self.__class__.__name__, "O(log(n))", display)
+    def __init__(self, sortable: list[int], sorting_strategy: SortingStrategy, display):
+        super().__init__(sortable, self.__class__.__name__, "O(log(n))", display)
         self.sorting_strategy = sorting_strategy
+
+    def draw(self, **kwargs) -> None:
+        pass
 
     def sort(self, sortable: list[int]) -> list[int]:
         if len(sortable) <= 1:
