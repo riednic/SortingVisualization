@@ -8,7 +8,7 @@ from drawable_algorithm import (
 )
 
 
-class InsertionSort(DrawableSortingAlgorithm):
+class BubbleSort(DrawableSortingAlgorithm):
 
     def __init__(self, sorting_strategy: SortingStrategy, py_display):
         super().__init__(self.__class__.__name__, "O(n^2)", py_display)
@@ -16,20 +16,13 @@ class InsertionSort(DrawableSortingAlgorithm):
         self.speed = 0
 
     def _sort(self, sortable: list[int], **kwargs) -> Iterator:
-        for i in range(0, len(sortable)):
-            value = sortable[i]
-            j = i
-            while self._sorting_condition(sortable, j, value):
-                yield {"current_value": i, "compared_value": j}
-                sortable[j] = sortable[j - 1]
-                j = j - 1
-            sortable[j] = value
-
-    def _sorting_condition(self, sortable: list[int], i: int, value: int) -> bool:
-        if self.sorting_strategy == SortingStrategy.LOW_TO_HIGH:
-            return (i > 0) and (sortable[i - 1] > value)
-        if self.sorting_strategy == SortingStrategy.HIGH_TO_LOW:
-            return (i > 0) and (sortable[i - 1] < value)
+        for i in range(len(sortable), 2, -1):
+            for j in range(0, i - 1):
+                if sortable[j] > sortable[j + 1]:
+                    yield {"current_value": i, "compared_value": j}
+                    value = sortable[j]
+                    sortable[j] = sortable[j + 1]
+                    sortable[j + 1] = value
 
     def _draw(self, sortable: list[int], current_value: int = -1, compared_value: int = -1) -> None:
         self._reset_display()

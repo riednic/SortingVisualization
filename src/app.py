@@ -8,6 +8,14 @@ def main():
     display = pygame.display.set_mode((1024, 512))
 
     random_list = []
+    for i in range(0, 50):
+        random_list.append(random.randint(0, 99999))
+
+    # Bubble-Sort
+    bubble_sort = da.BubbleSort(da.SortingStrategy.LOW_TO_HIGH, display)
+    print(bubble_sort.timed_sort(random_list))
+
+    random_list = []
     for i in range(0, 250):
         random_list.append(random.randint(0, 99999))
 
@@ -16,7 +24,7 @@ def main():
     print(merge_sort.timed_sort(random_list))
 
     random_list = []
-    for i in range(0, 250):
+    for i in range(0, 50):
         random_list.append(random.randint(0, 99999))
 
     # Insertion-Sort
