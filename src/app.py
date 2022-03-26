@@ -11,12 +11,20 @@ def main():
     for i in range(0, 50):
         random_list.append(random.randint(0, 99999))
 
+    # Quick-Sort
+    quick_sort = da.QuickSort(da.SortingStrategy.LOW_TO_HIGH, display)
+    print(quick_sort.timed_sort(random_list))
+
+    random_list = []
+    for i in range(0, 50):
+        random_list.append(random.randint(0, 99999))
+
     # Bubble-Sort
     bubble_sort = da.BubbleSort(da.SortingStrategy.LOW_TO_HIGH, display)
     print(bubble_sort.timed_sort(random_list))
 
     random_list = []
-    for i in range(0, 250):
+    for i in range(0, 50):
         random_list.append(random.randint(0, 99999))
 
     # Merge-Sort
@@ -30,7 +38,6 @@ def main():
     # Insertion-Sort
     insertion_sort = da.InsertionSort(da.SortingStrategy.LOW_TO_HIGH, display)
     print(insertion_sort.timed_sort(random_list))
-
 
 if __name__ == "__main__":
     main()
