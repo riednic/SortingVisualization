@@ -1,43 +1,35 @@
 import drawable_algorithms as da
-import pygame
-import random
+from random import shuffle
+from scene import Scene
 
 
 def main():
-    pygame.init()
-    display = pygame.display.set_mode((1024, 512))
-
-    random_list = []
-    for i in range(0, 50):
-        random_list.append(random.randint(0, 99999))
+    scene = Scene(1920, 600)
 
     # Quick-Sort
-    quick_sort = da.QuickSort(da.SortingStrategy.LOW_TO_HIGH, display)
-    print(quick_sort.timed_sort(random_list))
-
-    random_list = []
-    for i in range(0, 50):
-        random_list.append(random.randint(0, 99999))
-
-    # Bubble-Sort
-    bubble_sort = da.BubbleSort(da.SortingStrategy.LOW_TO_HIGH, display)
-    print(bubble_sort.timed_sort(random_list))
-
-    random_list = []
-    for i in range(0, 50):
-        random_list.append(random.randint(0, 99999))
+    random_list = list(range(1, 200))
+    shuffle(random_list)
+    quick_sort = da.QuickSort(da.SortingStrategy.HIGH_TO_LOW, scene)
+    quick_sort.draw_sorting_algorithm(random_list)
 
     # Merge-Sort
-    merge_sort = da.MergeSort(da.SortingStrategy.LOW_TO_HIGH, display)
-    print(merge_sort.timed_sort(random_list))
+    random_list = list(range(1, 200))
+    shuffle(random_list)
+    merge_sort = da.MergeSort(da.SortingStrategy.HIGH_TO_LOW, scene)
+    merge_sort.draw_sorting_algorithm(random_list)
 
-    random_list = []
-    for i in range(0, 50):
-        random_list.append(random.randint(0, 99999))
+    # Bubble-Sort
+    random_list = list(range(1, 100))
+    shuffle(random_list)
+    bubble_sort = da.BubbleSort(da.SortingStrategy.HIGH_TO_LOW, scene)
+    bubble_sort.draw_sorting_algorithm(random_list)
 
     # Insertion-Sort
-    insertion_sort = da.InsertionSort(da.SortingStrategy.LOW_TO_HIGH, display)
-    print(insertion_sort.timed_sort(random_list))
+    random_list = list(range(1, 100))
+    shuffle(random_list)
+    insertion_sort = da.InsertionSort(da.SortingStrategy.HIGH_TO_LOW, scene)
+    insertion_sort.draw_sorting_algorithm(random_list)
+
 
 if __name__ == "__main__":
     main()

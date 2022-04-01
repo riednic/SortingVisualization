@@ -8,7 +8,7 @@ from drawable_algorithm import (
 class QuickSort(DrawableSortingAlgorithm):
 
     def __init__(self, sorting_strategy: SortingStrategy, py_display):
-        super().__init__(self.__class__.__name__, "O(log(n))", 0, py_display)
+        super().__init__(self.__class__.__name__, "O(n*log(n))", 0, py_display)
         self.sorting_strategy = sorting_strategy
 
     def _sort(self, sortable: list[int], left: int = 0, right: int = -1) -> Iterator:
@@ -24,23 +24,25 @@ class QuickSort(DrawableSortingAlgorithm):
     def _split(self, sortable: list[int], left: int, right: int) -> int:
         i = left
         j = right
-        pivot = sortable[left]
+        pivot = sortable[i]
 
-        while True:
+        while i < j:
             if self.sorting_strategy == SortingStrategy.LOW_TO_HIGH:
-                while sortable[i] < pivot:
+                if sortable[i] < pivot:
                     i += 1
 
-                while sortable[j] > pivot:
+                if sortable[j] > pivot:
                     j -= 1
-            else:
-                while sortable[i] > pivot:
+
+            if self.sorting_strategy == SortingStrategy.HIGH_TO_LOW:
+                if sortable[i] > pivot:
                     i += 1
 
-                while sortable[j] < pivot:
+                if sortable[j] < pivot:
                     j -= 1
 
-            if j <= i:
+            if i >= j:
                 return i
+            else:
+                sortable[i], sortable[j] = sortable[j], sortable[i]
 
-            sortable[i], sortable[j] = sortable[j], sortable[i]

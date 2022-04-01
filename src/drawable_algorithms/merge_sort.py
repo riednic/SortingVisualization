@@ -8,7 +8,7 @@ from drawable_algorithm import (
 class MergeSort(DrawableSortingAlgorithm):
 
     def __init__(self, sorting_strategy: SortingStrategy, py_display):
-        super().__init__(self.__class__.__name__, "O(log(n))", 0, py_display)
+        super().__init__(self.__class__.__name__, "O(n*log(n))", 0, py_display)
         self.sorting_strategy = sorting_strategy
         self.speed = 0
 
